@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StrictCount</title>
+    <title>StrictCount | Academic Word Filter</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
@@ -15,172 +15,268 @@
 
     <style>
         :root {
-            --bg-color: #ffffff;
-            --text-main: #111111;
-            --text-muted: #666666;
-            --border-color: #e5e5e5;
-            --border-focus: #000000;
+            --bg-page: #fafafa;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --accent-green: #15803d; 
+            --border-light: #e5e7eb;
+            --btn-dark: #27272a;
+            --pill-bg: #f3f4f6;
         }
 
         body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-            background-color: var(--bg-color); 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            background: linear-gradient(180deg, #f0f6ff 0%, var(--bg-page) 400px);
+            background-repeat: no-repeat;
             color: var(--text-main); 
-            max-width: 1000px; 
-            margin: 60px auto; 
-            padding: 0 20px; 
-            line-height: 1.6;
-        }
-
-        /* Minimal Header */
-        header { border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 40px; }
-        h1 { margin: 0; font-weight: 700; font-size: 24px; letter-spacing: -0.5px; }
-        .subtitle { color: var(--text-muted); margin-top: 4px; font-size: 14px; }
-
-        /* Clean Upload Zone */
-        .upload-zone { 
-            border: 1px dashed var(--border-color); 
-            padding: 30px; 
-            text-align: center; 
-            cursor: pointer; 
-            transition: border-color 0.2s;
-            margin-bottom: 30px;
-        }
-        .upload-zone:hover, .upload-zone.dragover { border-color: var(--border-focus); }
-        .upload-label { font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
-        .upload-zone p { margin: 0; font-size: 14px; color: var(--text-muted); }
-
-        /* Stark Controls Grid */
-        .controls-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .control-group { display: flex; flex-direction: column; gap: 12px; }
-        .control-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
-        
-        .boundary-input { 
-            padding: 10px; 
-            border: 1px solid var(--border-color); 
-            font-family: inherit; 
-            font-size: 14px; 
-            outline: none; 
-            transition: border-color 0.2s;
-            width: 100%;
+            margin: 0; 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
             box-sizing: border-box;
         }
-        .boundary-input:focus { border-color: var(--border-focus); }
 
-        .checkbox-group { display: flex; flex-direction: column; gap: 8px; }
-        label { cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; color: var(--text-main);}
-        input[type="checkbox"] { accent-color: var(--text-main); cursor: pointer; }
-
-        /* Stark Stats Dashboard */
-        .dashboard { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 30px 0;
-            margin-bottom: 40px;
-        }
-        .stat-box { display: flex; flex-direction: column; gap: 4px; }
-        .stat-box h3 { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600;}
-        .stat-box p { margin: 0; font-size: 36px; font-weight: 400; letter-spacing: -1px;}
-        .highlight p { font-weight: 700; }
-
-        /* The Main Action Button */
-        .btn { 
-            background-color: var(--text-main); color: var(--bg-color); border: none; 
-            padding: 14px 24px; font-family: inherit; font-size: 14px; font-weight: 600; 
-            cursor: pointer; transition: background-color 0.2s;
-            width: 100%; margin-bottom: 40px;
-        }
-        .btn:hover { background-color: #333333; }
-        
-        /* Minimalist Text Areas */
-        .text-grid {
+        .layout-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: center;
         }
-        
-        .panel-wrapper { display: flex; flex-direction: column; height: 500px; }
-        .panel-header { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; letter-spacing: 0.5px;}
-        
-        textarea, .visualizer { 
-            flex: 1; width: 100%; padding: 20px; border: 1px solid var(--border-color); 
-            font-family: inherit; font-size: 14px; line-height: 1.8; box-sizing: border-box;
-            background: var(--bg-color); outline: none; transition: border-color 0.2s; resize: none;
-        }
-        textarea:focus { border-color: var(--border-focus); }
-        .visualizer { overflow-y: auto; white-space: pre-wrap; background-color: #fafafa; }
-        
-        /* Focus Mode: Faded Exclusions instead of glaring red */
-        .excluded-text { color: #a0a0a0; text-decoration: line-through; }
 
-        @media (max-width: 768px) {
-            .controls-wrapper, .text-grid, .dashboard { grid-template-columns: 1fr; }
-            .dashboard { padding: 20px 0; gap: 15px; }
-            .panel-wrapper { height: 400px; }
+        /* LEFT SIDE: Hero */
+        .hero-section { max-width: 450px; }
+        
+        h1 { 
+            font-size: 46px; 
+            font-weight: 700; 
+            line-height: 1.15; 
+            letter-spacing: -1.5px; 
+            margin: 0 0 20px 0;
+            color: var(--text-main);
+        }
+        h1 .accent { color: var(--accent-green); }
+        
+        .hero-desc { 
+            color: var(--text-muted); 
+            font-size: 17px; 
+            line-height: 1.6; 
+            margin-bottom: 30px; 
+        }
+
+        /* True Technical Features instead of Fake Stats */
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: rgba(21, 128, 61, 0.05);
+            border: 1px solid rgba(21, 128, 61, 0.1);
+            border-radius: 12px;
+            color: var(--accent-green);
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* RIGHT SIDE: The Tool Card */
+        .app-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid rgba(229, 231, 235, 0.8);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            height: 650px;
+            overflow: hidden;
+        }
+
+        /* Dynamic Stats Header */
+        .card-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            background: #f9fafb;
+            border-bottom: 1px solid var(--border-light);
+            text-align: center;
+        }
+        .stat-box { padding: 15px; border-right: 1px solid var(--border-light); }
+        .stat-box:last-child { border-right: none; background: #ffffff; }
+        .stat-label { font-size: 11px; text-transform: uppercase; font-weight: 600; color: var(--text-muted); letter-spacing: 0.5px;}
+        .stat-value { font-size: 24px; font-weight: 700; margin-top: 4px; color: var(--text-main); letter-spacing: -0.5px;}
+        .stat-box:last-child .stat-value { color: var(--accent-green); }
+
+        /* Card Tabs */
+        .card-tabs {
+            display: flex;
+            padding: 15px 20px 0 20px;
+            border-bottom: 1px solid var(--border-light);
+            gap: 20px;
+            background: #ffffff;
+        }
+        .tab {
+            background: none; border: none; padding: 10px 5px 15px 5px;
+            font-size: 14px; font-weight: 600; color: var(--text-muted);
+            cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit;
+        }
+        .tab.active { color: var(--text-main); border-bottom: 2px solid var(--text-main); }
+
+        /* Card Body (Text Areas) */
+        .card-body {
+            flex: 1;
+            position: relative;
+            background: #ffffff;
+        }
+        
+        textarea, .visualizer {
+            width: 100%; height: 100%; border: none; resize: none; outline: none;
+            font-family: inherit; font-size: 15px; line-height: 1.7; color: var(--text-main);
+            position: absolute; top: 0; left: 0; padding: 25px; box-sizing: border-box;
+            background: transparent;
+        }
+        
+        .visualizer { overflow-y: auto; white-space: pre-wrap; display: none; }
+        .visualizer.active { display: block; }
+        textarea.hidden { display: none; }
+
+        .excluded-text { color: #a1a1aa; text-decoration: line-through; background: #f4f4f5; border-radius: 4px; padding: 0 4px;}
+
+        /* Card Footer (Controls) */
+        .card-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-light);
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap;}
+        
+        /* Pill Buttons & Inputs */
+        .pill-btn, .boundary-input {
+            background: var(--pill-bg);
+            border: 1px solid transparent;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-main);
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .boundary-input { background: #ffffff; border-color: var(--border-light); outline: none;}
+        .boundary-input:focus { border-color: var(--text-main); }
+        .pill-btn.upload { cursor: pointer; border-color: var(--border-light); font-weight: 600;}
+        .pill-btn.upload:hover { background: #e5e7eb; }
+
+        /* Filter Checkboxes masquerading as Pills */
+        .filter-checkbox { display: none; }
+        .filter-label {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .filter-checkbox:checked + .filter-label {
+            background: #f0fdf4; /* Light green tint */
+            border-color: #bbf7d0;
+            color: var(--accent-green);
+        }
+
+        .copy-btn {
+            background: var(--btn-dark);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: auto; /* Pushes to the right */
+            transition: background 0.2s;
+        }
+        .copy-btn:hover { background: #000000; }
+
+        @media (max-width: 900px) {
+            .layout-container { grid-template-columns: 1fr; gap: 30px;}
+            .app-card { height: 600px; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>StrictCount</h1>
-        <div class="subtitle">Accurate academic word filtering.</div>
-    </header>
-
-    <div class="upload-zone" id="dropZone">
-        <p>Drop your <strong>.docx or .pdf</strong> here</p>
-        <p>or <label for="fileInput" class="upload-label">browse files</label></p>
-        <input type="file" id="fileInput" accept=".docx,.pdf" style="display: none;">
-    </div>
-
-    <div class="controls-wrapper" id="controlPanel">
-        <div class="control-group">
-            <span class="control-label">Document Boundaries</span>
-            <input type="text" id="startMarker" class="boundary-input" placeholder='Start counting at (e.g., Introduction)'>
-            <input type="text" id="endMarker" class="boundary-input" placeholder='Stop counting at (e.g., References)'>
+    <div class="layout-container">
+        <div class="hero-section">
+            <h1>Word count made to <span class="accent">preserve the truth.</span></h1>
+            <p class="hero-desc">StrictCount intelligently detects and removes inline citations, bibliographies, and structural figures to give you the exact, verified length of your academic paper.</p>
+            
+            <div class="trust-badge">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <span><b>100% Private Processing.</b><br>Your document never leaves your browser. No servers, no data collection.</span>
+            </div>
         </div>
-        
-        <div class="control-group">
-            <span class="control-label">Active Filters</span>
-            <div class="checkbox-group">
-                <label><input type="checkbox" id="excludeAPA" checked> Remove APA/Harvard citations</label>
-                <label><input type="checkbox" id="excludeMLA" checked> Remove MLA citations</label>
-                <label><input type="checkbox" id="excludeIEEE" checked> Remove IEEE/Chicago citations</label>
-                <label><input type="checkbox" id="excludeCaptions" checked> Remove figure captions & mentions</label> 
+
+        <div class="app-card">
+            
+            <div class="card-stats">
+                <div class="stat-box"><div class="stat-label">Gross Words</div><div class="stat-value" id="originalCount">0</div></div>
+                <div class="stat-box"><div class="stat-label">Filtered Out</div><div class="stat-value" id="excludedCount">0</div></div>
+                <div class="stat-box"><div class="stat-label">Strict Count</div><div class="stat-value" id="finalCount">0</div></div>
+            </div>
+
+            <div class="card-tabs">
+                <button class="tab active" id="tab-input">1. Raw Input</button>
+                <button class="tab" id="tab-visualizer">2. Live Verification</button>
+            </div>
+
+            <div class="card-body">
+                <textarea id="inputText" placeholder="Paste your essay here, or upload a .docx / .pdf file below..."></textarea>
+                <div id="visualizer" class="visualizer"></div>
+            </div>
+
+            <div class="card-footer">
+                <div class="row">
+                    <label for="fileInput" class="pill-btn upload">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        Upload Document
+                    </label>
+                    <input type="file" id="fileInput" accept=".docx,.pdf" style="display: none;">
+                    
+                    <input type="text" id="startMarker" class="boundary-input" placeholder="Ignore titles before... (e.g. Intro)">
+                    <input type="text" id="endMarker" class="boundary-input" placeholder="Ignore text after... (e.g. References)">
+                </div>
+                
+                <div class="row" style="padding-top: 5px;">
+                    <input type="checkbox" id="excludeAPA" class="filter-checkbox" checked>
+                    <label for="excludeAPA" class="filter-label">APA / Harvard</label>
+
+                    <input type="checkbox" id="excludeMLA" class="filter-checkbox" checked>
+                    <label for="excludeMLA" class="filter-label">MLA</label>
+
+                    <input type="checkbox" id="excludeIEEE" class="filter-checkbox" checked>
+                    <label for="excludeIEEE" class="filter-label">IEEE / Chicago</label>
+
+                    <input type="checkbox" id="excludeCaptions" class="filter-checkbox" checked>
+                    <label for="excludeCaptions" class="filter-label">Figures & Captions</label>
+
+                    <button class="copy-btn" id="copyBtn">Copy Clean Text</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="dashboard">
-        <div class="stat-box"><h3>Gross Words</h3><p id="originalCount">0</p></div>
-        <div class="stat-box"><h3>Excluded</h3><p id="excludedCount">0</p></div>
-        <div class="stat-box highlight"><h3>Strict Count</h3><p id="finalCount">0</p></div>
-    </div>
-
-    <button class="btn" id="copyBtn">Copy Clean Text</button>
-
-    <div class="text-grid">
-        <div class="panel-wrapper">
-            <div class="panel-header">Raw Input</div>
-            <textarea id="inputText" placeholder="Paste text here..."></textarea>
-        </div>
-        
-        <div class="panel-wrapper">
-            <div class="panel-header">Verified Output</div>
-            <div id="visualizer" class="visualizer"></div>
-        </div>
-    </div>
-
     <script>
+        // Regex Logic
         const regexAPA = /\([^)]*\b\d{4}\b[^)]*\)/g; 
         const regexMLA = /\([A-Za-z\s\.\-&]+ \d+\)/g;
         const regexIEEE = /(\[\s*\d+(?:\s*[-,]\s*\d+)*\s*\])|(\(\s*\d+(?:\s*[-,]\s*\d+)*\s*\))/g; 
@@ -189,14 +285,31 @@
 
         let finalCleanText = "";
 
+        // Tab Switching Logic
+        const tabInput = document.getElementById('tab-input');
+        const tabVis = document.getElementById('tab-visualizer');
+        const textArea = document.getElementById('inputText');
+        const visualizer = document.getElementById('visualizer');
+
+        tabInput.addEventListener('click', () => {
+            tabInput.classList.add('active'); tabVis.classList.remove('active');
+            textArea.classList.remove('hidden'); visualizer.classList.remove('active');
+        });
+
+        tabVis.addEventListener('click', () => {
+            tabVis.classList.add('active'); tabInput.classList.remove('active');
+            visualizer.classList.add('active'); textArea.classList.add('hidden');
+        });
+
+        // Processing Logic
         function escapeRegExp(string) { return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
         function countWords(str) { const words = str.trim().split(/\s+/); return words[0] === '' ? 0 : words.length; }
 
         function processText() {
-            const rawText = document.getElementById('inputText').value;
+            const rawText = textArea.value;
             
             if (!rawText.trim()) {
-                document.getElementById('visualizer').innerHTML = "";
+                visualizer.innerHTML = "";
                 document.getElementById('originalCount').innerText = "0";
                 document.getElementById('finalCount').innerText = "0";
                 document.getElementById('excludedCount').innerText = "0";
@@ -235,13 +348,10 @@
             document.getElementById('originalCount').innerText = ogCount;
             document.getElementById('finalCount').innerText = finCount;
             document.getElementById('excludedCount').innerText = ogCount - finCount;
-            document.getElementById('visualizer').innerHTML = visualText;
+            visualizer.innerHTML = visualText;
         }
 
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const textArea = document.getElementById('inputText');
-
+        // PDF Processing
         async function extractTextFromPDF(arrayBuffer) {
             const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
             let extractedText = [];
@@ -287,32 +397,29 @@
                     }
                     textArea.value = extractedString;
                     processText(); 
+                    
+                    // Auto-switch to visualizer tab on successful upload
+                    tabVis.click();
                 } catch (err) { alert(`Error reading your ${extension.toUpperCase()} file.`); }
             };
             reader.readAsArrayBuffer(file);
         }
 
-        fileInput.addEventListener('change', e => { if(e.target.files.length > 0) handleFile(e.target.files[0]); });
-        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
-        dropZone.addEventListener('dragleave', e => { e.preventDefault(); dropZone.classList.remove('dragover'); });
-        dropZone.addEventListener('drop', e => {
-            e.preventDefault(); dropZone.classList.remove('dragover');
-            if(e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
-        });
+        document.getElementById('fileInput').addEventListener('change', e => { if(e.target.files.length > 0) handleFile(e.target.files[0]); });
         textArea.addEventListener('input', processText);
-        document.querySelectorAll('#controlPanel input[type="checkbox"]').forEach(box => box.addEventListener('change', processText));
+        document.querySelectorAll('.filter-checkbox').forEach(box => box.addEventListener('change', processText));
         document.querySelectorAll('.boundary-input').forEach(input => input.addEventListener('input', processText));
 
         document.getElementById('copyBtn').addEventListener('click', function(e) {
             if (!finalCleanText) return;
             navigator.clipboard.writeText(finalCleanText).then(() => {
                 const btn = document.getElementById('copyBtn');
-                btn.innerText = "Copied to Clipboard";
-                btn.style.backgroundColor = "#27ae60"; /* A subtle green validation */
+                btn.innerText = "Copied!";
+                btn.style.background = "var(--accent-green)"; 
                 
                 setTimeout(() => {
                     btn.innerText = "Copy Clean Text";
-                    btn.style.backgroundColor = "var(--text-main)";
+                    btn.style.background = "var(--btn-dark)";
                 }, 2000);
             });
         });

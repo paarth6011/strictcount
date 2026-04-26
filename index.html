@@ -34,21 +34,22 @@
 
         /* Minimal Header */
         header { border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 40px; }
-        h1 { margin: 0; font-weight: 700; font-size: 24px; letter-spacing: -0.5px; }
-        .subtitle { color: var(--text-muted); margin-top: 4px; font-size: 14px; }
+        h1 { margin: 0; font-weight: 700; font-size: 26px; letter-spacing: -0.5px; }
+        .subtitle { color: var(--text-muted); margin-top: 4px; font-size: 15px; }
 
         /* Clean Upload Zone */
         .upload-zone { 
             border: 1px dashed var(--border-color); 
-            padding: 30px; 
+            padding: 40px 20px; 
             text-align: center; 
             cursor: pointer; 
             transition: border-color 0.2s;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            border-radius: 8px;
         }
         .upload-zone:hover, .upload-zone.dragover { border-color: var(--border-focus); }
-        .upload-label { font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
-        .upload-zone p { margin: 0; font-size: 14px; color: var(--text-muted); }
+        .upload-label { font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; color: var(--text-main); }
+        .upload-zone p { margin: 5px 0; font-size: 14px; color: var(--text-muted); }
 
         /* Stark Controls Grid */
         .controls-wrapper {
@@ -59,11 +60,12 @@
         }
 
         .control-group { display: flex; flex-direction: column; gap: 12px; }
-        .control-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+        .control-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
         
         .boundary-input { 
-            padding: 10px; 
+            padding: 12px; 
             border: 1px solid var(--border-color); 
+            border-radius: 6px;
             font-family: inherit; 
             font-size: 14px; 
             outline: none; 
@@ -73,9 +75,10 @@
         }
         .boundary-input:focus { border-color: var(--border-focus); }
 
-        .checkbox-group { display: flex; flex-direction: column; gap: 8px; }
-        label { cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; color: var(--text-main);}
-        input[type="checkbox"] { accent-color: var(--text-main); cursor: pointer; }
+        /* Scoped Checkbox Rules to fix previous bug */
+        .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+        .checkbox-group label { cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 10px; color: var(--text-main);}
+        input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--text-main); cursor: pointer; }
 
         /* Stark Stats Dashboard */
         .dashboard { 
@@ -88,20 +91,20 @@
             margin-bottom: 40px;
         }
         .stat-box { display: flex; flex-direction: column; gap: 4px; }
-        .stat-box h3 { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600;}
-        .stat-box p { margin: 0; font-size: 36px; font-weight: 400; letter-spacing: -1px;}
+        .stat-box h3 { margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600;}
+        .stat-box p { margin: 0; font-size: 42px; font-weight: 400; letter-spacing: -1px; line-height: 1;}
         .highlight p { font-weight: 700; }
 
         /* The Main Action Button */
         .btn { 
             background-color: var(--text-main); color: var(--bg-color); border: none; 
-            padding: 14px 24px; font-family: inherit; font-size: 14px; font-weight: 600; 
+            padding: 16px 24px; border-radius: 6px; font-family: inherit; font-size: 15px; font-weight: 600; 
             cursor: pointer; transition: background-color 0.2s;
             width: 100%; margin-bottom: 40px;
         }
         .btn:hover { background-color: #333333; }
         
-        /* Minimalist Text Areas - Fixed for Scrolling */
+        /* Fixed Text Areas with Inner Scrolling */
         .text-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -109,20 +112,15 @@
             margin-bottom: 40px;
         }
         
-        .panel-wrapper { 
-            display: flex; 
-            flex-direction: column; 
-            height: 500px; /* Strictly enforces the height of the container */
-            min-height: 0;
-        }
-        
-        .panel-header { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; letter-spacing: 0.5px;}
+        .panel-wrapper { display: flex; flex-direction: column; }
+        .panel-header { font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.5px;}
         
         textarea, .visualizer { 
-            flex: 1; 
             width: 100%; 
+            height: 500px; /* Firmly locked height */
             padding: 20px; 
             border: 1px solid var(--border-color); 
+            border-radius: 6px;
             font-family: inherit; 
             font-size: 14px; 
             line-height: 1.8; 
@@ -131,8 +129,7 @@
             outline: none; 
             transition: border-color 0.2s; 
             resize: none;
-            overflow-y: auto; /* Forces the scrollbar inside the box */
-            min-height: 0; /* Prevents the box from expanding to fit content */
+            overflow-y: auto; /* Enforces the inside scrollbar */
         }
         textarea:focus { border-color: var(--border-focus); }
         .visualizer { white-space: pre-wrap; background-color: #fafafa; }
@@ -143,6 +140,7 @@
         @media (max-width: 768px) {
             .controls-wrapper, .text-grid, .dashboard { grid-template-columns: 1fr; }
             .dashboard { padding: 20px 0; gap: 15px; }
+            textarea, .visualizer { height: 400px; }
         }
     </style>
 </head>
@@ -325,7 +323,7 @@
             navigator.clipboard.writeText(finalCleanText).then(() => {
                 const btn = document.getElementById('copyBtn');
                 btn.innerText = "Copied to Clipboard";
-                btn.style.backgroundColor = "#27ae60"; /* A subtle green validation */
+                btn.style.backgroundColor = "#27ae60"; 
                 
                 setTimeout(() => {
                     btn.innerText = "Copy Clean Text";

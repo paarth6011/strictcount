@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StrictCount</title>
+    <title>StrictCount | Pro Workspace</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
     </script>
@@ -23,116 +22,186 @@
             --mint: #b5ead7;
             --peach: #ffdac1;
             --white: #ffffff;
+            --border-radius: 20px;
         }
 
         body { 
             font-family: 'Nunito', system-ui, sans-serif; 
             background-color: var(--bg-page); 
             color: var(--text-main); 
-            max-width: 900px; 
-            margin: 40px auto; 
-            padding: 20px; 
+            max-width: 1400px; /* Widened for the Pro Layout */
+            margin: 30px auto; 
+            padding: 0 20px; 
         }
 
-        h1 { text-align: center; color: #6c5ce7; margin-bottom: 5px; font-weight: 800; font-size: 36px;}
-        .subtitle { text-align: center; color: #a29bfe; margin-bottom: 30px; font-size: 16px; font-weight: 600;}
+        /* Header styling tightened up */
+        .header-container { margin-bottom: 30px; }
+        h1 { color: #6c5ce7; margin: 0 0 5px 0; font-weight: 800; font-size: 32px; letter-spacing: -0.5px;}
+        .subtitle { color: #a29bfe; margin: 0; font-size: 15px; font-weight: 600;}
         
+        /* The New Pro Layout Grid */
+        .layout-wrapper {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: sticky;
+            top: 30px;
+        }
+
         .bubbly-box {
             background-color: var(--white);
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.08);
-            margin-bottom: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 24px rgba(108, 92, 231, 0.06);
             border: 2px solid var(--lavender);
+            padding: 20px;
         }
 
-        .upload-zone { padding: 30px; text-align: center; cursor: pointer; transition: all 0.2s ease; border: 3px dashed #c8c2f2; background: transparent; }
+        .upload-zone { text-align: center; cursor: pointer; transition: all 0.2s ease; border: 3px dashed #c8c2f2; background: transparent; }
         .upload-zone:hover, .upload-zone.dragover { background-color: var(--lavender); transform: translateY(-2px); }
-        .upload-label { color: #6c5ce7; text-decoration: none; font-weight: 800; cursor: pointer; background: var(--lavender); padding: 4px 12px; border-radius: 12px; }
+        .upload-label { color: #6c5ce7; text-decoration: none; font-weight: 800; cursor: pointer; background: var(--lavender); padding: 4px 12px; border-radius: 12px; font-size: 14px;}
+        .upload-zone p { margin: 10px 0; font-size: 14px; }
 
-        .controls { padding: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
+        .controls { display: flex; flex-direction: column; gap: 15px; }
         .boundary-control { display: flex; flex-direction: column; gap: 6px; }
-        .boundary-control span { font-size: 13px; font-weight: 800; color: #6c5ce7; }
-        .boundary-input { padding: 12px; border: 2px solid var(--lavender); border-radius: 12px; font-family: 'Nunito'; font-size: 14px; outline: none; transition: border 0.2s;}
+        .boundary-control span { font-size: 12px; font-weight: 800; color: #6c5ce7; text-transform: uppercase; letter-spacing: 0.5px;}
+        .boundary-input { padding: 10px 12px; border: 2px solid var(--lavender); border-radius: 12px; font-family: 'Nunito'; font-size: 14px; outline: none; transition: border 0.2s;}
         .boundary-input:focus { border-color: #6c5ce7; }
         
-        label { cursor: pointer; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px;}
-        input[type="checkbox"] { width: 18px; height: 18px; accent-color: #6c5ce7; cursor: pointer; }
+        label { cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;}
+        input[type="checkbox"] { width: 16px; height: 16px; accent-color: #6c5ce7; cursor: pointer; }
+
+        /* Stacked Dashboard for Sidebar */
+        .dashboard { background: var(--lavender); padding: 25px 20px; text-align: center; display: flex; flex-direction: column; gap: 15px;}
+        .stat-box h3 { margin: 0 0 2px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #6c5ce7; font-weight: 800;}
+        .stat-box p { margin: 0; font-size: 32px; font-weight: 800; color: var(--text-main); line-height: 1;}
+        .highlight p { color: #6c5ce7; font-size: 42px;}
         
-        .text-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
-        @media (max-width: 768px) { .text-panels { grid-template-columns: 1fr; } }
+        .btn { 
+            background-color: var(--mint); color: #2d3436; border: none; 
+            padding: 14px 20px; border-radius: 50px; font-family: 'Nunito'; font-size: 15px; font-weight: 800; 
+            cursor: pointer; box-shadow: 0 4px 15px rgba(181, 234, 215, 0.6); transition: all 0.2s;
+            width: 100%; margin-top: 5px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(181, 234, 215, 0.8); }
+        .btn:active { transform: translateY(1px); }
+
+        /* Right Main Content Area */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            height: calc(100vh - 100px);
+            min-height: 600px;
+        }
         
-        .panel-header { font-weight: 800; margin-bottom: 12px; color: #6c5ce7; font-size: 18px; padding-left: 5px; }
+        .panel-wrapper { display: flex; flex-direction: column; height: 100%; }
+        .panel-header { font-weight: 800; margin-bottom: 12px; color: #6c5ce7; font-size: 16px; padding-left: 5px; text-transform: uppercase; letter-spacing: 0.5px;}
         
         textarea, .visualizer { 
-            width: 100%; height: 350px; padding: 20px; border: 2px solid var(--lavender); 
-            border-radius: 20px; font-family: 'Nunito'; font-size: 15px; line-height: 1.7; box-sizing: border-box;
-            background: var(--white); outline: none; transition: border 0.2s;
+            flex: 1; width: 100%; padding: 25px; border: 2px solid var(--lavender); 
+            border-radius: var(--border-radius); font-family: 'Nunito'; font-size: 15px; line-height: 1.8; box-sizing: border-box;
+            background: var(--white); outline: none; transition: border 0.2s; resize: none;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.03);
         }
         textarea:focus { border-color: #6c5ce7; }
         .visualizer { overflow-y: auto; white-space: pre-wrap; background-color: #faf9ff; }
         
-        .excluded-text { background-color: var(--peach); color: #d63031; text-decoration: line-through; padding: 2px 6px; border-radius: 6px; opacity: 0.7;}
+        .excluded-text { background-color: var(--peach); color: #d63031; text-decoration: line-through; padding: 2px 6px; border-radius: 6px; opacity: 0.8;}
 
-        .dashboard { display: flex; justify-content: space-between; align-items: center; background: var(--lavender); padding: 25px; }
-        .stat-box { flex: 1; text-align: center; }
-        .stat-box h3 { margin: 0 0 5px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #6c5ce7; font-weight: 800;}
-        .stat-box p { margin: 0; font-size: 36px; font-weight: 800; color: var(--text-main); }
-        .highlight p { color: #6c5ce7; }
-        
-        .action-container { padding-left: 20px; border-left: 2px solid #d4cbf9; display: flex; justify-content: center; align-items: center;}
-        
-        .btn { 
-            background-color: var(--mint); color: #2d3436; border: none; 
-            padding: 16px 28px; border-radius: 50px; font-family: 'Nunito'; font-size: 16px; font-weight: 800; 
-            cursor: pointer; box-shadow: 0 4px 15px rgba(181, 234, 215, 0.6); transition: all 0.2s;
+        /* The Polished Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #b5b0e5;
+            text-align: center;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(181, 234, 215, 0.8); }
-        .btn:active { transform: translateY(1px); }
+        .empty-state svg { margin-bottom: 15px; opacity: 0.7; }
+        .empty-state p { margin: 0; font-weight: 600; font-size: 16px; }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .layout-wrapper { grid-template-columns: 1fr; }
+            .sidebar { position: static; flex-direction: row; flex-wrap: wrap; }
+            .sidebar > * { flex: 1; min-width: 300px; }
+            .main-content { height: 600px; }
+        }
+        @media (max-width: 768px) {
+            .main-content { grid-template-columns: 1fr; height: auto; }
+            textarea, .visualizer { height: 400px; flex: none; }
+        }
     </style>
 </head>
 <body>
 
-    <h1>StrictCount</h1>
-    <div class="subtitle">Accurately filter and count your words.</div>
-
-    <div class="bubbly-box upload-zone" id="dropZone">
-        <p>Drop your <strong>.docx or .pdf</strong> essay right here, or <label for="fileInput" class="upload-label">Browse</label></p>
-        <input type="file" id="fileInput" accept=".docx,.pdf" style="display: none;">
+    <div class="header-container">
+        <h1>StrictCount</h1>
+        <div class="subtitle">Accurate academic word filtering.</div>
     </div>
 
-    <div class="bubbly-box controls" id="controlPanel">
-        <div class="boundary-control">
-            <span>Start counting at (ignore title pages):</span>
-            <input type="text" id="startMarker" class="boundary-input" placeholder='e.g., Introduction'>
-        </div>
-        <div class="boundary-control">
-            <span>Stop counting at (ignore references):</span>
-            <input type="text" id="endMarker" class="boundary-input" placeholder='e.g., References'>
-        </div>
-        <label><input type="checkbox" id="excludeAPA" checked> Hide APA/Harvard <i>(Smith, 2023)</i></label>
-        <label><input type="checkbox" id="excludeMLA" checked> Hide MLA <i>(Smith 45)</i></label>
-        <label><input type="checkbox" id="excludeIEEE" checked> Hide IEEE/Chicago <i>[1] or (1)</i></label>
-        <label><input type="checkbox" id="excludeCaptions" checked> Hide Captions & Mentions <i>(Fig 1)</i></label> 
-    </div>
+    <div class="layout-wrapper">
+        <div class="sidebar">
+            <div class="bubbly-box upload-zone" id="dropZone">
+                <p>Drop your <strong>.docx or .pdf</strong> here</p>
+                <p>or <label for="fileInput" class="upload-label">Browse Files</label></p>
+                <input type="file" id="fileInput" accept=".docx,.pdf" style="display: none;">
+            </div>
 
-    <div class="text-panels">
-        <div>
-            <div class="panel-header">Paste your text</div>
-            <textarea id="inputText" placeholder="Enter your text here..."></textarea>
-        </div>
-        <div>
-            <div class="panel-header">Live Verification</div>
-            <div id="visualizer" class="visualizer">Your text will appear here. The excluded citations will be crossed out in peach.</div>
-        </div>
-    </div>
+            <div class="bubbly-box controls" id="controlPanel">
+                <div class="boundary-control">
+                    <span>Start counting at (Ignore Titles):</span>
+                    <input type="text" id="startMarker" class="boundary-input" placeholder='e.g., Introduction'>
+                </div>
+                <div class="boundary-control">
+                    <span>Stop counting at (Ignore Bibliography):</span>
+                    <input type="text" id="endMarker" class="boundary-input" placeholder='e.g., References'>
+                </div>
+                <hr style="border: 1px solid var(--lavender); width: 100%; margin: 5px 0;">
+                <label><input type="checkbox" id="excludeAPA" checked> Hide APA/Harvard</label>
+                <label><input type="checkbox" id="excludeMLA" checked> Hide MLA</label>
+                <label><input type="checkbox" id="excludeIEEE" checked> Hide IEEE/Chicago</label>
+                <label><input type="checkbox" id="excludeCaptions" checked> Hide Captions & Mentions</label> 
+            </div>
 
-    <div class="bubbly-box dashboard">
-        <div class="stat-box"><h3>Total Words</h3><p id="originalCount">0</p></div>
-        <div class="stat-box"><h3>Filtered Out</h3><p id="excludedCount">0</p></div>
-        <div class="stat-box highlight"><h3>True Word Count</h3><p id="finalCount">0</p></div>
-        <div class="action-container">
-            <button class="btn" id="copyBtn">Copy Clean Text</button>
+            <div class="bubbly-box dashboard">
+                <div class="stat-box"><h3>Total Words</h3><p id="originalCount">0</p></div>
+                <div class="stat-box"><h3>Filtered Out</h3><p id="excludedCount">0</p></div>
+                <div class="stat-box highlight"><h3>True Word Count</h3><p id="finalCount">0</p></div>
+                <button class="btn" id="copyBtn">Copy Clean Text</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="panel-wrapper">
+                <div class="panel-header">Raw Input</div>
+                <textarea id="inputText" placeholder="Paste your essay text here, or upload a document using the panel on the left..."></textarea>
+            </div>
+            
+            <div class="panel-wrapper">
+                <div class="panel-header">Live Verification</div>
+                <div id="visualizer" class="visualizer">
+                    <div class="empty-state">
+                        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#c8c2f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        <p>Your verified text will appear here.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -145,11 +214,36 @@
 
         let finalCleanText = "";
 
+        // The SVG to show when the text area is empty
+        const emptyStateHTML = `
+            <div class="empty-state">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#c8c2f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <p>Your verified text will appear here.</p>
+            </div>
+        `;
+
         function escapeRegExp(string) { return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
         function countWords(str) { const words = str.trim().split(/\s+/); return words[0] === '' ? 0 : words.length; }
 
         function processText() {
             const rawText = document.getElementById('inputText').value;
+            
+            // If text is empty, show the empty state and reset counters
+            if (!rawText.trim()) {
+                document.getElementById('visualizer').innerHTML = emptyStateHTML;
+                document.getElementById('originalCount').innerText = "0";
+                document.getElementById('finalCount').innerText = "0";
+                document.getElementById('excludedCount').innerText = "0";
+                finalCleanText = "";
+                return;
+            }
+
             let filteredText = rawText;
             let visualText = rawText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -181,7 +275,7 @@
             document.getElementById('originalCount').innerText = ogCount;
             document.getElementById('finalCount').innerText = finCount;
             document.getElementById('excludedCount').innerText = ogCount - finCount;
-            document.getElementById('visualizer').innerHTML = visualText || "Awaiting your text...";
+            document.getElementById('visualizer').innerHTML = visualText;
         }
 
         const dropZone = document.getElementById('dropZone');
@@ -253,16 +347,15 @@
             if (!finalCleanText) return;
             navigator.clipboard.writeText(finalCleanText).then(() => {
                 
-                // You can remove this block if you don't want the confetti effect at all!
                 confetti({
-                    particleCount: 150,
-                    spread: 80,
+                    particleCount: 100,
+                    spread: 70,
                     origin: { y: 0.6 },
                     colors: ['#b5ead7', '#ffdac1', '#6c5ce7', '#ece8ff']
                 });
 
                 const btn = document.getElementById('copyBtn');
-                btn.innerText = "Copied!";
+                btn.innerText = "Copied to Clipboard!";
                 btn.style.backgroundColor = "#fff";
                 btn.style.color = "#6c5ce7";
                 
@@ -270,7 +363,7 @@
                     btn.innerText = "Copy Clean Text";
                     btn.style.backgroundColor = "var(--mint)";
                     btn.style.color = "#2d3436";
-                }, 2500);
+                }, 2000);
             });
         });
     </script>

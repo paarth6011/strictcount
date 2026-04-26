@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StrictCount</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --text-main: #4a4a68;
+            --bg-page: #f8f6ff;
+            --lavender: #ece8ff;
+            --mint: #b5ead7;
+            --peach: #ffdac1;
+            --white: #ffffff;
+        }
+
+        body { 
+            font-family: 'Nunito', system-ui, sans-serif; 
+            background-color: var(--bg-page); 
+            color: var(--text-main); 
+            max-width: 900px; 
+            margin: 40px auto; 
+            padding: 20px; 
+        }
+
+        h1 { text-align: center; color: #6c5ce7; margin-bottom: 5px; font-weight: 800; font-size: 36px;}
+        .subtitle { text-align: center; color: #a29bfe; margin-bottom: 30px; font-size: 16px; font-weight: 600;}
+        
+        .bubbly-box {
+            background-color: var(--white);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.08);
+            margin-bottom: 25px;
+            border: 2px solid var(--lavender);
+        }
+
+        .upload-zone { padding: 30px; text-align: center; cursor: pointer; transition: all 0.2s ease; border: 3px dashed #c8c2f2; background: transparent; }
+        .upload-zone:hover, .upload-zone.dragover { background-color: var(--lavender); transform: translateY(-2px); }
+        .upload-label { color: #6c5ce7; text-decoration: none; font-weight: 800; cursor: pointer; background: var(--lavender); padding: 4px 12px; border-radius: 12px; }
+
+        .controls { padding: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .boundary-control { display: flex; flex-direction: column; gap: 6px; }
+        .boundary-control span { font-size: 13px; font-weight: 800; color: #6c5ce7; }
+        .boundary-input { padding: 12px; border: 2px solid var(--lavender); border-radius: 12px; font-family: 'Nunito'; font-size: 14px; outline: none; transition: border 0.2s;}
+        .boundary-input:focus { border-color: #6c5ce7; }
+        
+        label { cursor: pointer; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px;}
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: #6c5ce7; cursor: pointer; }
+        
+        .text-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
+        @media (max-width: 768px) { .text-panels { grid-template-columns: 1fr; } }
+        
+        .panel-header { font-weight: 800; margin-bottom: 12px; color: #6c5ce7; font-size: 18px; padding-left: 5px; }
+        
+        textarea, .visualizer { 
+            width: 100%; height: 350px; padding: 20px; border: 2px solid var(--lavender); 
+            border-radius: 20px; font-family: 'Nunito'; font-size: 15px; line-height: 1.7; box-sizing: border-box;
+            background: var(--white); outline: none; transition: border 0.2s;
+        }
+        textarea:focus { border-color: #6c5ce7; }
+        .visualizer { overflow-y: auto; white-space: pre-wrap; background-color: #faf9ff; }
+        
+        .excluded-text { background-color: var(--peach); color: #d63031; text-decoration: line-through; padding: 2px 6px; border-radius: 6px; opacity: 0.7;}
+
+        .dashboard { display: flex; justify-content: space-between; align-items: center; background: var(--lavender); padding: 25px; }
+        .stat-box { flex: 1; text-align: center; }
+        .stat-box h3 { margin: 0 0 5px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #6c5ce7; font-weight: 800;}
+        .stat-box p { margin: 0; font-size: 36px; font-weight: 800; color: var(--text-main); }
+        .highlight p { color: #6c5ce7; }
+        
+        .action-container { padding-left: 20px; border-left: 2px solid #d4cbf9; display: flex; justify-content: center; align-items: center;}
+        
+        .btn { 
+            background-color: var(--mint); color: #2d3436; border: none; 
+            padding: 16px 28px; border-radius: 50px; font-family: 'Nunito'; font-size: 16px; font-weight: 800; 
+            cursor: pointer; box-shadow: 0 4px 15px rgba(181, 234, 215, 0.6); transition: all 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(181, 234, 215, 0.8); }
+        .btn:active { transform: translateY(1px); }
+    </style>
+</head>
+<body>
+
+    <h1>StrictCount</h1>
+    <div class="subtitle">Accurately filter and count your words.</div>
+
+    <div class="bubbly-box upload-zone" id="dropZone">
+        <p>Drop your <strong>.docx or .pdf</strong> essay right here, or <label for="fileInput" class="upload-label">Browse</label></p>
+        <input type="file" id="fileInput" accept=".docx,.pdf" style="display: none;">
+    </div>
+
+    <div class="bubbly-box controls" id="controlPanel">
+        <div class="boundary-control">
+            <span>Start counting at (ignore title pages):</span>
+            <input type="text" id="startMarker" class="boundary-input" placeholder='e.g., Introduction'>
+        </div>
+        <div class="boundary-control">
+            <span>Stop counting at (ignore references):</span>
+            <input type="text" id="endMarker" class="boundary-input" placeholder='e.g., References'>
+        </div>
+        <label><input type="checkbox" id="excludeAPA" checked> Hide APA/Harvard <i>(Smith, 2023)</i></label>
+        <label><input type="checkbox" id="excludeMLA" checked> Hide MLA <i>(Smith 45)</i></label>
+        <label><input type="checkbox" id="excludeIEEE" checked> Hide IEEE/Chicago <i>[1] or (1)</i></label>
+        <label><input type="checkbox" id="excludeCaptions" checked> Hide Captions & Mentions <i>(Fig 1)</i></label> 
+    </div>
+
+    <div class="text-panels">
+        <div>
+            <div class="panel-header">Paste your text</div>
+            <textarea id="inputText" placeholder="Enter your text here..."></textarea>
+        </div>
+        <div>
+            <div class="panel-header">Live Verification</div>
+            <div id="visualizer" class="visualizer">Your text will appear here. The excluded citations will be crossed out in peach.</div>
+        </div>
+    </div>
+
+    <div class="bubbly-box dashboard">
+        <div class="stat-box"><h3>Total Words</h3><p id="originalCount">0</p></div>
+        <div class="stat-box"><h3>Filtered Out</h3><p id="excludedCount">0</p></div>
+        <div class="stat-box highlight"><h3>True Word Count</h3><p id="finalCount">0</p></div>
+        <div class="action-container">
+            <button class="btn" id="copyBtn">Copy Clean Text</button>
+        </div>
+    </div>
+
+    <script>
+        const regexAPA = /\([^)]*\b\d{4}\b[^)]*\)/g; 
+        const regexMLA = /\([A-Za-z\s\.\-&]+ \d+\)/g;
+        const regexIEEE = /(\[\s*\d+(?:\s*[-,]\s*\d+)*\s*\])|(\(\s*\d+(?:\s*[-,]\s*\d+)*\s*\))/g; 
+        const regexCaptions = /^\s*(?:Figure|Fig\.?|Table)\s+[A-Za-z0-9]+[.:\-]?\s+[\s\S]*?(?=\n\n|$)/gim;
+        const regexInTextFigs = /\([^)]*\b(?:Figure|Fig\.?|Table)\s+[A-Za-z0-9]+[^)]*\)/gi;
+
+        let finalCleanText = "";
+
+        function escapeRegExp(string) { return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+        function countWords(str) { const words = str.trim().split(/\s+/); return words[0] === '' ? 0 : words.length; }
+
+        function processText() {
+            const rawText = document.getElementById('inputText').value;
+            let filteredText = rawText;
+            let visualText = rawText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            const activeFilters = [];
+            const startStr = document.getElementById('startMarker').value.trim();
+            const endStr = document.getElementById('endMarker').value.trim();
+
+            if (startStr !== "") activeFilters.push(new RegExp('^[\\s\\S]*?(?=\\b' + escapeRegExp(startStr) + '\\b)', 'i'));
+            if (endStr !== "") activeFilters.push(new RegExp('\\b' + escapeRegExp(endStr) + '\\b[\\s\\S]*', 'i'));
+            
+            if (document.getElementById('excludeAPA').checked) activeFilters.push(regexAPA);
+            if (document.getElementById('excludeMLA').checked) activeFilters.push(regexMLA);
+            if (document.getElementById('excludeIEEE').checked) activeFilters.push(regexIEEE);
+            if (document.getElementById('excludeCaptions').checked) {
+                activeFilters.push(regexCaptions);
+                activeFilters.push(regexInTextFigs); 
+            }
+
+            activeFilters.forEach(regex => {
+                filteredText = filteredText.replace(regex, ' ');
+                visualText = visualText.replace(regex, match => `<span class="excluded-text">${match}</span>`);
+            });
+
+            finalCleanText = filteredText.replace(/\s+/g, ' ').trim();
+
+            const ogCount = countWords(rawText);
+            const finCount = countWords(filteredText);
+            
+            document.getElementById('originalCount').innerText = ogCount;
+            document.getElementById('finalCount').innerText = finCount;
+            document.getElementById('excludedCount').innerText = ogCount - finCount;
+            document.getElementById('visualizer').innerHTML = visualText || "Awaiting your text...";
+        }
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const textArea = document.getElementById('inputText');
+
+        async function extractTextFromPDF(arrayBuffer) {
+            const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+            let extractedText = [];
+            
+            for (let j = 1; j <= pdf.numPages; j++) {
+                let page = await pdf.getPage(j);
+                let textContent = await page.getTextContent();
+                let pageText = "";
+                let lastY = -1;
+
+                for (let item of textContent.items) {
+                    let str = item.str.trim();
+                    if (!str) continue; 
+                    
+                    if (lastY !== -1) {
+                        let deltaY = Math.abs(lastY - item.transform[5]);
+                        if (deltaY > 22) { pageText += '\n\n'; } 
+                        else if (deltaY > 4) { pageText += ' '; }
+                        else { pageText += ' '; }
+                    }
+                    pageText += str;
+                    lastY = item.transform[5];
+                }
+                extractedText.push(pageText);
+            }
+            return extractedText.join('\n\n');
+        }
+
+        function handleFile(file) {
+            const extension = file.name.split('.').pop().toLowerCase();
+            if (extension !== 'docx' && extension !== 'pdf') { alert("Unsupported file format. Please use .docx or .pdf."); return; }
+
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+                try {
+                    let extractedString = "";
+                    if (extension === 'docx') {
+                        const result = await mammoth.extractRawText({arrayBuffer: event.target.result});
+                        extractedString = result.value;
+                    } 
+                    else if (extension === 'pdf') {
+                        extractedString = await extractTextFromPDF(event.target.result);
+                    }
+                    textArea.value = extractedString;
+                    processText(); 
+                } catch (err) { alert(`Error reading your ${extension.toUpperCase()} file.`); }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        fileInput.addEventListener('change', e => { if(e.target.files.length > 0) handleFile(e.target.files[0]); });
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', e => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault(); dropZone.classList.remove('dragover');
+            if(e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+        });
+        textArea.addEventListener('input', processText);
+        document.querySelectorAll('#controlPanel input[type="checkbox"]').forEach(box => box.addEventListener('change', processText));
+        document.querySelectorAll('.boundary-input').forEach(input => input.addEventListener('input', processText));
+
+        document.getElementById('copyBtn').addEventListener('click', function(e) {
+            if (!finalCleanText) return;
+            navigator.clipboard.writeText(finalCleanText).then(() => {
+                
+                // You can remove this block if you don't want the confetti effect at all!
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#b5ead7', '#ffdac1', '#6c5ce7', '#ece8ff']
+                });
+
+                const btn = document.getElementById('copyBtn');
+                btn.innerText = "Copied!";
+                btn.style.backgroundColor = "#fff";
+                btn.style.color = "#6c5ce7";
+                
+                setTimeout(() => {
+                    btn.innerText = "Copy Clean Text";
+                    btn.style.backgroundColor = "var(--mint)";
+                    btn.style.color = "#2d3436";
+                }, 2500);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -34,7 +34,6 @@
             line-height: 1.6;
         }
 
-        /* Top Row (Header + Dashboard) */
         .top-row {
             display: flex;
             justify-content: space-between;
@@ -44,12 +43,10 @@
             margin-bottom: 40px;
         }
 
-        /* Header */
         .header-container { margin-bottom: 0; } 
         h1 { margin: 0; font-weight: 700; font-size: 28px; letter-spacing: -0.5px; color: var(--text-main);}
         .subtitle { color: var(--text-muted); margin-top: 6px; font-size: 15px; font-weight: 400;}
 
-        /* Top Dashboard (Stats & Button) */
         .top-dashboard {
             display: flex;
             align-items: center;
@@ -62,7 +59,6 @@
             border: 1px solid var(--border-light);
         }
 
-        /* Stats Spacing and Dividers */
         .stat-group { 
             display: flex; 
             flex-direction: row; 
@@ -70,7 +66,7 @@
         }
         
         .stat-box {
-            padding: 0 40px; /* Clean spacing between numbers */
+            padding: 0 40px; 
             border-right: 1px solid var(--border-light);
             display: flex;
             flex-direction: column;
@@ -90,7 +86,6 @@
         }
         .btn:hover { background-color: #000000; }
         
-        /* Layout Grid for the Bottom Half */
         .layout-wrapper {
             display: grid;
             grid-template-columns: 320px 1fr; 
@@ -98,7 +93,6 @@
             align-items: flex-start;
         }
 
-        /* Sidebar Styling */
         .sidebar {
             display: flex;
             flex-direction: column;
@@ -114,13 +108,11 @@
             padding: 30px; 
         }
 
-        /* Upload Zone */
         .upload-zone { text-align: center; cursor: pointer; transition: all 0.2s; border: 1px dashed #d1d5db; box-shadow: none;}
         .upload-zone:hover, .upload-zone.dragover { border-color: var(--text-main); background: #f9fafb;}
         .upload-label { font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; color: var(--text-main);}
         .upload-zone p { margin: 5px 0; font-size: 14px; color: var(--text-muted); font-weight: 500; }
 
-        /* Controls with clear divisions */
         .control-section { 
             margin-bottom: 24px; 
             padding-bottom: 24px; 
@@ -147,7 +139,6 @@
         input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--text-main); cursor: pointer; }
 
 
-        /* Text Areas */
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -180,9 +171,8 @@
         .excluded-text { color: #9ca3af; text-decoration: line-through; background: #f3f4f6; border-radius: 4px; padding: 0 4px;}
 
 
-        /* Responsive */
         @media (max-width: 1150px) {
-            .stat-box { padding: 0 20px; } /* Shrink padding on mid-sized screens to fit */
+            .stat-box { padding: 0 20px; } 
         }
         @media (max-width: 1024px) {
             .top-row { flex-direction: column; align-items: stretch; }
@@ -195,7 +185,6 @@
         @media (max-width: 768px) {
             .main-content { grid-template-columns: 1fr; }
             textarea, .visualizer { height: 400px; }
-            /* Convert vertical dividers to horizontal on mobile */
             .stat-group { flex-direction: column; width: 100%; }
             .stat-box { border-right: none; border-bottom: 1px solid var(--border-light); padding: 20px 0; width: 100%;}
             .stat-box:first-child { padding-top: 0; }

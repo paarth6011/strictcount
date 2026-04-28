@@ -29,21 +29,72 @@
             background-color: var(--bg-page); 
             color: var(--text-main); 
             max-width: 1400px; 
-            margin: 40px auto; 
+            margin: 50px auto; 
             padding: 0 20px; 
             line-height: 1.6;
         }
 
+        /* Top Row (Header + Dashboard) */
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
         /* Header */
-        .header-container { margin-bottom: 40px; }
+        .header-container { margin-bottom: 0; } 
         h1 { margin: 0; font-weight: 700; font-size: 28px; letter-spacing: -0.5px; color: var(--text-main);}
-        .subtitle { color: var(--text-muted); margin-top: 4px; font-size: 14px; font-weight: 400;}
+        .subtitle { color: var(--text-muted); margin-top: 6px; font-size: 15px; font-weight: 400;}
+
+        /* Top Dashboard (Stats & Button) */
+        .top-dashboard {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 24px 32px; 
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-light);
+        }
+
+        /* Stats Spacing and Dividers */
+        .stat-group { 
+            display: flex; 
+            flex-direction: row; 
+            align-items: center;
+        }
         
-        /* Layout Grid */
+        .stat-box {
+            padding: 0 40px; /* Clean spacing between numbers */
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        .stat-box:first-child { padding-left: 0; }
+        .stat-box:last-child { border-right: none; padding-right: 0;}
+
+        .stat-box h3 { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600;}
+        .stat-box p { margin: 6px 0 0 0; font-size: 34px; font-weight: 700; color: var(--text-main); line-height: 1; letter-spacing: -0.5px;}
+        
+        .btn { 
+            background-color: var(--text-main); color: #ffffff; border: none; 
+            padding: 16px 40px; border-radius: 8px; font-family: inherit; font-size: 15px; font-weight: 600; 
+            cursor: pointer; transition: background-color 0.2s; white-space: nowrap;
+        }
+        .btn:hover { background-color: #000000; }
+        
+        /* Layout Grid for the Bottom Half */
         .layout-wrapper {
             display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 40px;
+            grid-template-columns: 320px 1fr; 
+            gap: 50px; 
             align-items: flex-start;
         }
 
@@ -51,113 +102,133 @@
         .sidebar {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 30px; 
             position: sticky;
-            top: 40px;
+            top: 50px;
         }
 
         .panel-card {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
             border: 1px solid var(--border-light);
-            padding: 24px;
+            padding: 30px; 
         }
 
         /* Upload Zone */
         .upload-zone { text-align: center; cursor: pointer; transition: all 0.2s; border: 1px dashed #d1d5db; box-shadow: none;}
         .upload-zone:hover, .upload-zone.dragover { border-color: var(--text-main); background: #f9fafb;}
         .upload-label { font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; color: var(--text-main);}
-        .upload-zone p { margin: 5px 0; font-size: 13px; color: var(--text-muted); font-weight: 500; }
+        .upload-zone p { margin: 5px 0; font-size: 14px; color: var(--text-muted); font-weight: 500; }
 
-        /* Controls */
-        .control-section { margin-bottom: 24px; }
-        .control-section:last-child { margin-bottom: 0; }
-        .section-title { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: block;}
+        /* Controls with clear divisions */
+        .control-section { 
+            margin-bottom: 24px; 
+            padding-bottom: 24px; 
+            border-bottom: 1px solid var(--border-light); 
+        }
+        .control-section:last-child { 
+            margin-bottom: 0; 
+            padding-bottom: 0; 
+            border-bottom: none; 
+        }
+        
+        .section-title { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: block;}
         
         .boundary-input { 
-            width: 100%; padding: 10px 12px; border: 1px solid var(--border-light); border-radius: 6px; 
+            width: 100%; padding: 12px 14px; border: 1px solid var(--border-light); border-radius: 6px; 
             font-family: inherit; font-size: 13px; outline: none; transition: border 0.2s; box-sizing: border-box;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .boundary-input:last-child { margin-bottom: 0; }
         .boundary-input:focus { border-color: var(--text-main); }
         
-        .checkbox-group { display: flex; flex-direction: column; gap: 12px; }
+        .checkbox-group { display: flex; flex-direction: column; gap: 14px; }
         label { cursor: pointer; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 10px; color: var(--text-main);}
         input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--text-main); cursor: pointer; }
 
-        /* Dashboard Stats (Vertically Stacked as in screenshot) */
-        .stat-group { display: flex; flex-direction: column; gap: 20px; text-align: center; }
-        .stat-box h3 { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600;}
-        .stat-box p { margin: 4px 0 0 0; font-size: 32px; font-weight: 700; color: var(--text-main); line-height: 1; letter-spacing: -0.5px;}
-        
-        .btn { 
-            background-color: var(--text-main); color: #ffffff; border: none; 
-            padding: 14px 20px; border-radius: 6px; font-family: inherit; font-size: 14px; font-weight: 600; 
-            cursor: pointer; transition: background-color 0.2s; width: 100%; margin-top: 10px;
-        }
-        .btn:hover { background-color: #000000; }
 
-        /* Right Main Content */
+        /* Text Areas */
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            gap: 30px; 
+            min-width: 0;
         }
         
         .panel-wrapper { display: flex; flex-direction: column; }
-        .panel-header { font-weight: 600; margin-bottom: 12px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;}
+        .panel-header { font-weight: 600; margin-bottom: 16px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px;}
         
-        /* THE FIX: Fixed height and strict scrollbars */
         textarea, .visualizer { 
             width: 100%; 
-            height: 550px; /* Locked height */
-            padding: 20px; 
+            height: 550px; 
+            padding: 24px; 
             border: 1px solid var(--border-light); 
             border-radius: var(--border-radius); 
             font-family: inherit; 
             font-size: 14px; 
-            line-height: 1.7; 
+            line-height: 1.8; 
             box-sizing: border-box;
             background: var(--card-bg); 
             outline: none; 
             transition: border 0.2s; 
             resize: none; 
-            overflow-y: auto; /* Forces the scrollbar to appear inside */
+            overflow-y: auto; 
         }
         
         textarea:focus { border-color: var(--border-focus); }
         .visualizer { white-space: pre-wrap; }
-        
         .excluded-text { color: #9ca3af; text-decoration: line-through; background: #f3f4f6; border-radius: 4px; padding: 0 4px;}
 
+
         /* Responsive */
+        @media (max-width: 1150px) {
+            .stat-box { padding: 0 20px; } /* Shrink padding on mid-sized screens to fit */
+        }
         @media (max-width: 1024px) {
+            .top-row { flex-direction: column; align-items: stretch; }
+            .header-container { text-align: center; }
+            .top-dashboard { justify-content: center; }
             .layout-wrapper { grid-template-columns: 1fr; }
             .sidebar { position: static; flex-direction: row; flex-wrap: wrap; }
             .sidebar > * { flex: 1; min-width: 250px; }
-            .stat-group { flex-direction: row; justify-content: space-around; }
         }
         @media (max-width: 768px) {
             .main-content { grid-template-columns: 1fr; }
             textarea, .visualizer { height: 400px; }
+            /* Convert vertical dividers to horizontal on mobile */
+            .stat-group { flex-direction: column; width: 100%; }
+            .stat-box { border-right: none; border-bottom: 1px solid var(--border-light); padding: 20px 0; width: 100%;}
+            .stat-box:first-child { padding-top: 0; }
+            .stat-box:last-child { border-bottom: none; padding-bottom: 0;}
+            .btn { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <div class="header-container">
-        <h1>StrictCount</h1>
-        <div class="subtitle">Accurate academic word filtering.</div>
+    <div class="top-row">
+        <div class="header-container">
+            <h1>StrictCount</h1>
+            <div class="subtitle">Accurate academic word filtering.</div>
+        </div>
+
+        <div class="top-dashboard">
+            <div class="stat-group">
+                <div class="stat-box"><h3>Gross Words</h3><p id="originalCount">0</p></div>
+                <div class="stat-box"><h3>Filtered Out</h3><p id="excludedCount">0</p></div>
+                <div class="stat-box"><h3>Strict Count</h3><p id="finalCount">0</p></div>
+            </div>
+            <button class="btn" id="copyBtn">Copy Clean Text</button>
+        </div>
     </div>
 
     <div class="layout-wrapper">
+        
         <div class="sidebar">
-            
             <div class="panel-card upload-zone" id="dropZone">
-                <p style="color: var(--text-main); font-weight: 600; margin-bottom: 8px;">Drop your .docx or .pdf here</p>
+                <p style="color: var(--text-main); font-weight: 600; margin-bottom: 10px;">Drop your .docx or .pdf here</p>
                 <p>or</p>
-                <p><label for="fileInput" class="upload-label">browse files</label></p>
+                <p style="margin-top: 10px;"><label for="fileInput" class="upload-label">browse files</label></p>
                 <input type="file" id="fileInput" accept=".docx,.pdf" style="display: none;">
             </div>
 
@@ -168,7 +239,7 @@
                     <input type="text" id="endMarker" class="boundary-input" placeholder='Stop count at (e.g., References)'>
                 </div>
                 
-                <div class="control-section" style="margin-bottom: 0;">
+                <div class="control-section">
                     <span class="section-title">Filters</span>
                     <div class="checkbox-group">
                         <label><input type="checkbox" id="excludeAPA" checked> Hide APA/Harvard</label>
@@ -178,17 +249,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="panel-card">
-                <div class="stat-group">
-                    <div class="stat-box"><h3>Gross Words</h3><p id="originalCount">0</p></div>
-                    <div class="stat-box"><h3>Filtered Out</h3><p id="excludedCount">0</p></div>
-                    <div class="stat-box"><h3>Strict Count</h3><p id="finalCount">0</p></div>
-                </div>
-            </div>
-            
-            <button class="btn" id="copyBtn">Copy Clean Text</button>
-            
         </div>
 
         <div class="main-content">
@@ -202,6 +262,7 @@
                 <div id="visualizer" class="visualizer"></div>
             </div>
         </div>
+
     </div>
 
     <script>
